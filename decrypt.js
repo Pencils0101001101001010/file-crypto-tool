@@ -1,0 +1,80 @@
+const fs = require("node:fs");
+const crypto = require("node:crypto");
+const { pipeline } = require("node:stream");
+const path = require("node:path");
+
+const password = process.env.CRYPTO_TOOL_PASSKEY;
+const savedEncryptedFile = process.argv[2];
+const decryptedFileName = process.argv[3];
+const algorithm = "aes-256-gcm";
+
+const encryptedDir = path.join(__dirname, "encrypted");
+const decryptedDir = path.join(__dirname, "decrypted");
+
+// Ensure the directories exist before doing any file operations
+fs.mkdirSync(encryptedDir, { recursive: true });
+fs.mkdirSync(decryptedDir, { recursive: true });
+
+let fileDesc;
+
+console.log(`${encryptedDir}/${savedEncryptedFile}`);
+console.log(decryptedDir);
+
+try {
+  fileDesc = fs.openSync(`${encryptedDir}/${savedEncryptedFile}`, "r");
+} catch (error) {
+  if (error.code === "ENOENT") {
+    return console.log(
+      `Check file name and format at ${encryptedDir}. File should have fullname.format`,
+    );
+  }
+}
+
+if (decryptedFileName === undefined) {
+  return console.log(
+    "please provide name and format (filename.format) for decrypted file ",
+  );
+}
+const fileSize = fs.fstatSync(fileDesc).size;
+
+const salt = Buffer.alloc(16); // salt for key derivation function
+const iv = Buffer.alloc(12);
+const authCode = Buffer.alloc(16);
+
+/**
+ * First sixteen bytes is for the salt
+ * Second twelve bytes is for the iv
+ * Everything in between is the cipher text
+ * Last sixteen bytes is for the Message auth code(MAC)
+ */
+
+// get the salt from the file, the first 16 bits will have the salt
+fs.readSync(fileDesc, salt, 0, 16, 0);
+//next take the iv from encrypted file. Starting from index 16 and therefrom the next 12 bits will be the iv key
+fs.readSync(fileDesc, iv, 0, 12, 16);
+//next take the auth code from the last 16 bits of the encrypted file
+fs.readSync(fileDesc, authCode, 0, 16, fileSize - 16);
+
+crypto.pbkdf2(password, salt, 1_000_000, 32, "sha512", (err, key) => {
+  if (err) return console.error(err);
+
+  const cipher = crypto.createDecipheriv(algorithm, key, iv);
+
+  //Set the MAC for authentication
+  cipher.setAuthTag(authCode);
+
+  // Specify where to read the cipher text in the file
+  const input = fs.createReadStream(`${encryptedDir}/${savedEncryptedFile}`, {
+    start: 28, //excluding the salt + iv. This will only start reading for the 28th bit
+    end: fileSize - (16 + 1), // Excluding the MAC which is the last 16 bits of the file
+  });
+  const plaintext = fs.createWriteStream(
+    `${decryptedDir}/${decryptedFileName}`,
+  );
+
+  pipeline(input, cipher, plaintext, (err) => {
+    if (err) return console.error(err);
+
+    console.log("File decrypted, and authentication tag verified.");
+  });
+});
