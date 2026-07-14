@@ -33,6 +33,7 @@ const algorithm = "aes-256-gcm";
 const salt = crypto.randomBytes(16); // salt for key derivation function
 const iv = crypto.randomBytes(12); // best practice is 96 bits for GHASH function to work optimally
 
+//Password-Based Key Derivation Function 2
 crypto.pbkdf2(password, salt, 1_000_000, 32, "sha512", (err, key) => {
   if (err) return console.error(err);
 
@@ -41,7 +42,7 @@ crypto.pbkdf2(password, salt, 1_000_000, 32, "sha512", (err, key) => {
   //The below is now the salt + iv + MAC
   const output = fs.createWriteStream(targetedDir); //use process.argv[3] to name file dynamically
 
-  //* write salt + iv in metadata so that decryption can read it in receiving it and then decrypt successfully
+  //* write salt + iv in metadata so that decryption can read it in receiving file and then decrypt successfully
 
   output.write(salt);
   output.write(iv);

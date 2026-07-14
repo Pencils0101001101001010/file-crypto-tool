@@ -17,9 +17,6 @@ fs.mkdirSync(decryptedDir, { recursive: true });
 
 let fileDesc;
 
-console.log(`${encryptedDir}/${savedEncryptedFile}`);
-console.log(decryptedDir);
-
 try {
   fileDesc = fs.openSync(`${encryptedDir}/${savedEncryptedFile}`, "r");
 } catch (error) {
@@ -48,13 +45,14 @@ const authCode = Buffer.alloc(16);
  * Last sixteen bytes is for the Message auth code(MAC)
  */
 
-// get the salt from the file, the first 16 bits will have the salt
+// get the salt from encrypted file, the first 16 bytes will have the salt
 fs.readSync(fileDesc, salt, 0, 16, 0);
-//next take the iv from encrypted file. Starting from index 16 and therefrom the next 12 bits will be the iv key
+//next take the iv from encrypted file. Starting from index 16 and therefrom the next 12 bytes will be the iv key
 fs.readSync(fileDesc, iv, 0, 12, 16);
-//next take the auth code from the last 16 bits of the encrypted file
+//next take the auth code from the last 16 bytes of the encrypted file
 fs.readSync(fileDesc, authCode, 0, 16, fileSize - 16);
 
+//Password-Based Key Derivation Function 2
 crypto.pbkdf2(password, salt, 1_000_000, 32, "sha512", (err, key) => {
   if (err) return console.error(err);
 
@@ -65,8 +63,8 @@ crypto.pbkdf2(password, salt, 1_000_000, 32, "sha512", (err, key) => {
 
   // Specify where to read the cipher text in the file
   const input = fs.createReadStream(`${encryptedDir}/${savedEncryptedFile}`, {
-    start: 28, //excluding the salt + iv. This will only start reading for the 28th bit
-    end: fileSize - (16 + 1), // Excluding the MAC which is the last 16 bits of the file
+    start: 28, //excluding the salt + iv. This will only start reading from the 28th byte
+    end: fileSize - (16 + 1), // Excluding the MAC which is the last 16 bytes of the file
   });
   const plaintext = fs.createWriteStream(
     `${decryptedDir}/${decryptedFileName}`,
