@@ -1,2 +1,4 @@
 encrypted/
 decrypted/
+node_modules/
+package-lock.json

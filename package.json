@@ -1,0 +1,23 @@
+{
+  "name": "file-crypto-tool",
+  "version": "1.0.0",
+  "description": "Node.js File Encryption UtilityA lightweight, secure command-line tool written in Node.js to encrypt and decrypt files using the AES-256-GCM authenticated encryption algorithm. This project uses modern Node.js streams and native cryptographic modules to securely handle large files without exhausting system memory.",
+  "homepage": "https://github.com/Pencils0101001101001010/file-crypto-tool#readme",
+  "bugs": {
+    "url": "https://github.com/Pencils0101001101001010/file-crypto-tool/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pencils0101001101001010/file-crypto-tool.git"
+  },
+  "license": "ISC",
+  "author": "SJ Kinnear",
+  "type": "commonjs",
+  "main": "decrypt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.5.2"
+  }
+}

@@ -1,4 +1,5 @@
-Node.js File Encryption UtilityA lightweight, secure command-line tool written in Node.js to encrypt and decrypt files using the AES-256-GCM authenticated encryption algorithm.
+#Node.js File Encryption Utility
+A lightweight, secure command-line tool written in Node.js to encrypt and decrypt files using the AES-256-GCM authenticated encryption algorithm.
 This project uses modern Node.js streams and native cryptographic modules to securely handle large files without exhausting system memory.
 
 Security FeaturesAuthenticated Encryption: Uses aes-256-gcm to guarantee both data confidentiality and integrity (tamper-proofing).
