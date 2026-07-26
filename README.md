@@ -35,23 +35,27 @@ All files are processed dynamically relative to the root directory of this scrip
 -       cd file-crypto-tool.
 -       run npm install
 
-2. ### Set the Password Environment VariableThe application requires an environment variable named CRYPTO_TOOL_PASSKEY to be set on your operating system.
+2.  ### Set the Password Environment VariableThe application requires an environment variable named CRYPTO_TOOL_PASSKEY to be set on your operating system.
 
-   Run the appropriate command in your terminal to set it up for your curren session:
+    Run the appropriate command in your terminal to set it up for your curren session:
 
-   export CRYPTO_TOOL_PASSKEY="your_secret_passphrase_here"
+         export CRYPTO_TOOL_PASSKEY="your_secret_passphrase_here"
 
-3. ### Encrypt a File
+3.  ### Encrypt a File
 
-   To encrypt an existing file, run node encrypt.js, then it will prompt you to enter the path to the file and a name for the newly encrypted file. All encrypted files will be saved with the format .enc
+    To encrypt an existing file, run node encrypt.js, then it will prompt you to enter the path to the file and a name for the newly encrypted file. All encrypted files will be saved with the format .enc
 
-   Result: An encrypted binary file containing the Salt, IV, Ciphertext, and Authentication Tag will be safely stored at ./encrypted/secure_vault.enc.
+         node encrypt.js
 
-4. ### Decrypt a File
+    Result: An encrypted binary file containing the Salt, IV, Ciphertext, and Authentication Tag will be safely stored at ./encrypted/secure_vault.enc.
 
-   To decrypt a file, run node decrypt.js, it will prompt you to enter the name of the encrypted file (example.enc), and the name of the newly decrypted file and relative format e.g example.pdf.
+4.  ### Decrypt a File
 
-   Result: The script will verify the integrity tag, validate the payload, and output the original file to ./decrypted/recovered_document.pdf.
+    To decrypt a file, run node decrypt.js, it will prompt you to enter the name of the encrypted file (example.enc), and the name of the newly decrypted file and relative format e.g example.pdf.
+
+         node decrypt.js
+
+    Result: The script will verify the integrity tag, validate the payload, and output the original file to ./decrypted/recovered_document.pdf.
 
 ## Technical File Structure Specification
 
