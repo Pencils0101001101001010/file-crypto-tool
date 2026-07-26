@@ -37,7 +37,7 @@ All files are processed dynamically relative to the root directory of this scrip
 
 2.  ### The application requires an environment variable named CRYPTO_TOOL_PASSKEY to be set on your operating system.
 
-    Run the appropriate command in your terminal to set it up for your curren session:
+    Run the appropriate command in your terminal to set it up for your current session:
 
          export CRYPTO_TOOL_PASSKEY="your_secret_passphrase_here"
 
