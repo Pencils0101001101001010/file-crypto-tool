@@ -3,12 +3,12 @@
 A lightweight, secure command-line tool written in Node.js to encrypt and decrypt files using the AES-256-GCM authenticated encryption algorithm.
 This project uses modern Node.js streams and native cryptographic modules to securely handle large files without exhausting system memory.
 
-## Security FeaturesAuthenticated Encryption:
+## Security Features Authenticated Encryption:
 
-Uses aes-256-gcm to guarantee both data confidentiality and integrity (tamper-proofing).
-Strong Key Derivation: Derives a 32-byte key from your password using PBKDF2 with 1,000,000 iterations and a cryptographically secure random salt.
-No Hardcoded Secrets: Uses system environment variables to handle passwords securely.
-Unique Nonces: Generates a fresh Initialization Vector (IV) and Salt for every encryption session.
+- Uses aes-256-gcm to guarantee both data confidentiality and integrity (tamper-proofing).
+- Strong Key Derivation: Derives a 32-byte key from your password using PBKDF2 with 1,000,000 iterations and a cryptographically secure random salt.
+- No Hardcoded Secrets: Uses system environment variables to handle passwords securely.
+- Unique Nonces: Generates a fresh Initialization Vector (IV) and Salt for every encryption session.
 
 ## Project Layout
 
@@ -36,19 +36,22 @@ All files are processed dynamically relative to the root directory of this scrip
 - run npm install
 
 2. ### Set the Password Environment VariableThe application requires an environment variable named CRYPTO_TOOL_PASSKEY to be set on your operating system.
+
    Run the appropriate command in your terminal to set it up for your curren session:
 
-export CRYPTO_TOOL_PASSKEY="your_secret_passphrase_here"
+   export CRYPTO_TOOL_PASSKEY="your_secret_passphrase_here"
 
 3. ### Encrypt a File
+
    To encrypt an existing file, run node encrypt.js, then it will prompt you to enter the path to the file and a name for the newly encrypted file. All encrypted files will be saved with the format .enc
 
-Result: An encrypted binary file containing the Salt, IV, Ciphertext, and Authentication Tag will be safely stored at ./encrypted/secure_vault.enc.
+   Result: An encrypted binary file containing the Salt, IV, Ciphertext, and Authentication Tag will be safely stored at ./encrypted/secure_vault.enc.
 
 4. ### Decrypt a File
+
    To decrypt a file, run node decrypt.js, it will prompt you to enter the name of the encrypted file (example.enc), and the name of the newly decrypted file and relative format e.g example.pdf.
 
-Result: The script will verify the integrity tag, validate the payload, and output the original file to ./decrypted/recovered_document.pdf.
+   Result: The script will verify the integrity tag, validate the payload, and output the original file to ./decrypted/recovered_document.pdf.
 
 ## Technical File Structure Specification
 
