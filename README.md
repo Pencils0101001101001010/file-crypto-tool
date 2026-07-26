@@ -55,7 +55,7 @@ All files are processed dynamically relative to the root directory of this scrip
 
 ## Technical File Structure Specification
 
-When files are encrypted, they are packed sequentially into a single binary file according to this format payload layout:
+    When files are encrypted, they are packed sequentially into a single binary file according to this format payload layout:
 
 - Bytes 0 to 16: Key Derivation Function Salt (Length: 16 bytes)
 - Bytes 16 to 28: AES-GCM Initialization Vector (Length: 12 bytes)
