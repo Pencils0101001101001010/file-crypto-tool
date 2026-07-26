@@ -31,9 +31,9 @@ All files are processed dynamically relative to the root directory of this scrip
 1. ### Initialize Your Project Directory
    Create a dedicated folder on your computer and open it in your code editor or terminal.
 
-- mkdir file-crypto-tool
-- cd file-crypto-tool.
-- run npm install
+-       mkdir file-crypto-tool
+-       cd file-crypto-tool.
+-       run npm install
 
 2. ### Set the Password Environment VariableThe application requires an environment variable named CRYPTO_TOOL_PASSKEY to be set on your operating system.
 
