@@ -3,6 +3,7 @@ const crypto = require("node:crypto");
 const { pipeline } = require("node:stream");
 const path = require("node:path");
 const { input } = require("@inquirer/prompts");
+const Loader = require("./loader");
 // Or
 // import input from '@inquirer/input';
 
@@ -13,6 +14,10 @@ const { input } = require("@inquirer/prompts");
   const savedEncryptedFile = await input({
     message: "What will the encrypted files name be:",
   });
+
+  // console.log(process.pid);
+  const size = fs.statSync(filePath).size;
+  // console.log(`size: ${size}`);
 
   /**
    * First sixteen bytes is for the salt
@@ -43,6 +48,7 @@ const { input } = require("@inquirer/prompts");
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     const plaintext = fs.createReadStream(filePath); //use process.argv[2] to insert file dynamically
     //The below is now the salt + iv + MAC
+
     const output = fs.createWriteStream(targetedDir); //use process.argv[3] to name file dynamically
 
     //* write salt + iv in metadata so that decryption can read it in receiving file and then decrypt successfully
@@ -50,7 +56,9 @@ const { input } = require("@inquirer/prompts");
     output.write(salt);
     output.write(iv);
 
-    pipeline(plaintext, cipher, output, (err) => {
+    const loader = new Loader(size, "Encrypting");
+
+    pipeline(plaintext, loader, cipher, output, (err) => {
       if (err) return console.error(err);
 
       const authCode = cipher.getAuthTag(); // get the message authentication code. 16 bytes inserted at the end of the file

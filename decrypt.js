@@ -3,16 +3,18 @@ const crypto = require("node:crypto");
 const { pipeline } = require("node:stream");
 const path = require("node:path");
 const { input } = require("@inquirer/prompts");
+const Loader = require("./loader");
 
 (async () => {
   const password = process.env.CRYPTO_TOOL_PASSKEY;
 
   const savedEncryptedFile = await input({
-    message: "Enter name for encrypted file:",
+    message: "Enter name for encrypted file(add format .enc at the end):",
   });
 
   const decryptedFileName = await input({
-    message: "Enter name for decrypted file:",
+    message:
+      "Enter name for decrypted file(specify desired file format e.g .txt):",
   });
 
   // const savedEncryptedFile = process.argv[2];
@@ -34,6 +36,11 @@ const { input } = require("@inquirer/prompts");
     );
   }
   const fileSize = fs.fstatSync(fileDesc).size;
+
+  const HEADER_SIZE = 28; // 16 (salt) + 12 (iv)
+  const TAG_SIZE = 16;
+  const ciphertextSize = fileSize - HEADER_SIZE - TAG_SIZE;
+  console.log(`Size ${ciphertextSize}`);
 
   const salt = Buffer.alloc(16); // salt for key derivation function
   const iv = Buffer.alloc(12);
@@ -72,7 +79,9 @@ const { input } = require("@inquirer/prompts");
       `${decryptedDir}/${decryptedFileName}`,
     );
 
-    pipeline(input, cipher, plaintext, (err) => {
+    const loader = new Loader(ciphertextSize, "Decrypting");
+
+    pipeline(input, loader, cipher, plaintext, (err) => {
       if (err) return console.error(err);
 
       console.log("File decrypted, and authentication tag verified.");
