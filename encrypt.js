@@ -48,6 +48,7 @@ const Loader = require("./loader");
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     const plaintext = fs.createReadStream(filePath); //use process.argv[2] to insert file dynamically
     //The below is now the salt + iv + MAC
+    console.time("Encrypted in");
 
     const output = fs.createWriteStream(targetedDir); //use process.argv[3] to name file dynamically
 
@@ -64,6 +65,7 @@ const Loader = require("./loader");
       const authCode = cipher.getAuthTag(); // get the message authentication code. 16 bytes inserted at the end of the file
       fs.appendFileSync(targetedDir, authCode);
       console.log(`File encrypted and saved to ${targetedDir}`);
+      console.timeEnd("Encrypted in");
     });
   });
 })();

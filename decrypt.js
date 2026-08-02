@@ -74,6 +74,7 @@ const Loader = require("./loader");
       start: 28, //excluding the salt + iv. This will only start reading from the 28th byte
       end: fileSize - (16 + 1), // Excluding the MAC which is the last 16 bytes of the file
     });
+    console.time("Decrypted in");
 
     const plaintext = fs.createWriteStream(
       `${decryptedDir}/${decryptedFileName}`,
@@ -85,6 +86,7 @@ const Loader = require("./loader");
       if (err) return console.error(err);
 
       console.log("File decrypted, and authentication tag verified.");
+      console.timeEnd("Decrypted in");
     });
   });
 })();
